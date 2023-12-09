@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/eldocument_v2
+    url: jdbc:mysql://localhost:3306/el_document?createDatabaseIfNotExist=true
     username: root
-    password: Pidraxuy111
+    password: ggtt1234
   jpa:
     hibernate:
       ddl-auto: update

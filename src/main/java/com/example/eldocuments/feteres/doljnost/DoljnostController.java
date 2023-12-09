@@ -1,5 +1,7 @@
 package com.example.eldocuments.feteres.doljnost;
 
+import com.example.eldocuments.common.exceptions.ForbiddenException;
+import com.example.eldocuments.common.security.expressions.CustomSecurityExpression;
 import com.example.eldocuments.feteres.doljnost.enitites.DoljnostEntity;
 import com.example.eldocuments.feteres.doljnost.services.DoljnostService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -15,6 +17,8 @@ import java.util.List;
 public class DoljnostController {
 
     private final DoljnostService doljnostService;
+
+    private final CustomSecurityExpression customSecurityExpression;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -34,6 +38,9 @@ public class DoljnostController {
     @ResponseStatus(HttpStatus.CREATED)
     @SecurityRequirement(name = "bearerAuth")
     private DoljnostEntity create(@RequestParam String name) {
+        if(!customSecurityExpression.hasIsAdmin())
+            throw new ForbiddenException();
+
         return doljnostService.create(name);
     }
 }

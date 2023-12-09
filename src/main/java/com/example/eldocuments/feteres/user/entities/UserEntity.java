@@ -20,6 +20,9 @@ public class UserEntity {
     @Column(nullable = false)
     private Boolean isAdmin = false;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private UKeyEntity uKey;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private UserDetailsInfoEntity details;
 }
