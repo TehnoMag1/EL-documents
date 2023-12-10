@@ -3,7 +3,8 @@ package com.example.eldocuments.feteres.user.controllers;
 import com.example.eldocuments.common.exceptions.ForbiddenException;
 import com.example.eldocuments.common.security.expressions.CustomSecurityExpression;
 import com.example.eldocuments.feteres.user.dto.CreateUserDetailsInfoParams;
-import com.example.eldocuments.feteres.user.dto.CreateUserParams;
+import com.example.eldocuments.feteres.user.dto.CreateOrUpdateUserParams;
+import com.example.eldocuments.feteres.user.dto.UserDetailsDto;
 import com.example.eldocuments.feteres.user.dto.UserDto;
 import com.example.eldocuments.feteres.user.dto.security.JwtRequestDto;
 import com.example.eldocuments.feteres.user.dto.security.JwtResponseDto;
@@ -42,29 +43,38 @@ public class UserController {
 
     @GetMapping("{id}")
     @SecurityRequirement(name = "bearerAuth")
-    private UserEntity getById(@PathVariable Integer id) {
-
-        if(!customSecurityExpression.hasIsAdmin())
-            throw new ForbiddenException();
-
-        return userService.getById(id);
+    private UserDetailsDto getById(@PathVariable Integer id) {
+        return UserDetailsDto.create(userService.getById(id));
     }
 
     @GetMapping("me")
     @SecurityRequirement(name = "bearerAuth")
-    private UserEntity me() {
+    private UserDetailsDto me() {
         Integer userId = userService.getUserIdByAuthentication();
-        return userService.getById(userId);
+        return UserDetailsDto.create(userService.getById(userId));
     }
 
     @PostMapping
     @SecurityRequirement(name = "bearerAuth")
-    private Integer add(@RequestBody CreateUserParams params) {
+    private Integer add(@RequestBody CreateOrUpdateUserParams params) {
 
         if(!customSecurityExpression.hasIsAdmin())
             throw new ForbiddenException();
 
         return userService.add(params);
+    }
+
+    @PutMapping("{id}")
+    @SecurityRequirement(name = "bearerAuth")
+    private void update(
+            @PathVariable Integer id,
+            @RequestBody CreateOrUpdateUserParams params
+    ) {
+
+        if(!customSecurityExpression.hasIsAdmin())
+            throw new ForbiddenException();
+
+        userService.update(id, params);
     }
 
     @PostMapping("{id}/details")

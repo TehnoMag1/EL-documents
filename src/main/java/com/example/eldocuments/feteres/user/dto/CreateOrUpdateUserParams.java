@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateUserParams {
+public class CreateOrUpdateUserParams {
     private String uKey;
     private String firstName;
     private String lastName;

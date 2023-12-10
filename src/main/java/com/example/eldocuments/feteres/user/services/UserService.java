@@ -4,7 +4,7 @@ import com.example.eldocuments.common.exceptions.NotFoundException;
 import com.example.eldocuments.feteres.doljnost.enitites.DoljnostEntity;
 import com.example.eldocuments.feteres.doljnost.services.DoljnostService;
 import com.example.eldocuments.feteres.user.dto.CreateUserDetailsInfoParams;
-import com.example.eldocuments.feteres.user.dto.CreateUserParams;
+import com.example.eldocuments.feteres.user.dto.CreateOrUpdateUserParams;
 import com.example.eldocuments.feteres.user.dto.security.JwtRequestDto;
 import com.example.eldocuments.feteres.user.dto.security.JwtResponseDto;
 import com.example.eldocuments.feteres.user.entities.UKeyEntity;
@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,10 +39,12 @@ public class UserService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Transactional(readOnly = true)
     public List<UserEntity> getAll() {
         return userRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public JwtResponseDto login(JwtRequestDto dto) {
         JwtResponseDto jwtResponse = new JwtResponseDto();
 
@@ -55,11 +58,13 @@ public class UserService {
         return jwtResponse;
     }
 
+    @Transactional(readOnly = true)
     public UserEntity getById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
+    @Transactional(readOnly = true)
     public UKeyEntity getUKeyEntityByUKey(String uKey) {
         return uKeyRepository.findByUkey(uKey)
                 .orElseThrow(() -> new NotFoundException("UKey not found"));
@@ -74,7 +79,8 @@ public class UserService {
         return getUserByAuthentication().getId();
     }
 
-    public Integer add(CreateUserParams params) {
+    @Transactional
+    public Integer add(CreateOrUpdateUserParams params) {
         UserEntity user = new UserEntity();
         UKeyEntity uKey = new UKeyEntity();
 
@@ -93,6 +99,25 @@ public class UserService {
         return user.getId();
     }
 
+    @Transactional
+    public void update(Integer userId, CreateOrUpdateUserParams params) {
+        UserEntity user = getById(userId);
+        UKeyEntity uKey = new UKeyEntity();
+
+        user.setMidName(params.getMidName());
+        user.setLastName(params.getLastName());
+        user.setFirstName(params.getFirstName());
+
+        user = userRepository.save(user);
+
+        uKey.setId(user.getId());
+        uKey.setUkey(params.getUKey());
+        uKey.setUser(user);
+
+        uKeyRepository.save(uKey);
+    }
+
+    @Transactional
     public Integer addDetails(Integer userId, CreateUserDetailsInfoParams params) {
         UserDetailsInfoEntity userDetailsInfo = new UserDetailsInfoEntity();
         DoljnostEntity doljnost = doljnostService.getById(params.getDoljnostId());
@@ -108,6 +133,7 @@ public class UserService {
         return userDetailsInfoRepository.save(userDetailsInfo).getId();
     }
 
+    @Transactional
     public void deleteById(Integer id) {
         userRepository.deleteById(id);
     }
