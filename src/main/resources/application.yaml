@@ -1,0 +1,16 @@
+server:
+  forward-headers-strategy: framework
+  servlet:
+    context-path: /EL-documents
+spring:
+  datasource:
+    url: jdbc:mysql://cfif31.ru:3306/ISPr24-39_MihailovVS_el_document?createDatabaseIfNotExist=true
+    username: ISPr24-39_MihailovVS
+    password: ISPr24-39_MihailovVS
+  jpa:
+    hibernate:
+      ddl-auto: update
+security:
+  jwt:
+    secret: c2Zqa3NkamZranNkbGtqZmtsc2pka2ZqdmJjeHZic2JkZmJzamtkZA==
+    access: 365

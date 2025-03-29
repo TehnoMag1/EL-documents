@@ -1,0 +1,10 @@
+services:
+  e-l-documents:
+    image: e-l-documents:latest
+    build:
+      context: .
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: "no"
+    ports:
+      - "18006:8080"
