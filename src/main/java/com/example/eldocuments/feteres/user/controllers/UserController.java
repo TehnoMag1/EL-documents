@@ -104,7 +104,8 @@ public class UserController {
         userService.deleteById(id);
     }
 
-    @PostMapping("/{id}/photo")
+    @PostMapping(value = "/{id}/photo", consumes = { "multipart/form-data" })
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<String> uploadPhoto(@PathVariable Integer id, @RequestParam("file") MultipartFile file) {
         try {
             userService.uploadPhoto(id, file);
@@ -115,6 +116,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/photo")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<byte[]> getPhoto(@PathVariable Integer id) {
         byte[] photo = userService.getPhoto(id);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(photo);
