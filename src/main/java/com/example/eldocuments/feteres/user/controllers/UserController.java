@@ -12,8 +12,13 @@ import com.example.eldocuments.feteres.user.entities.UserEntity;
 import com.example.eldocuments.feteres.user.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -97,5 +102,21 @@ public class UserController {
             throw new ForbiddenException();
 
         userService.deleteById(id);
+    }
+
+    @PostMapping("/{id}/photo")
+    public ResponseEntity<String> uploadPhoto(@PathVariable Integer id, @RequestParam("file") MultipartFile file) {
+        try {
+            userService.uploadPhoto(id, file);
+            return ResponseEntity.ok("Фото загружено успешно");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка загрузки фото");
+        }
+    }
+
+    @GetMapping("/{id}/photo")
+    public ResponseEntity<byte[]> getPhoto(@PathVariable Integer id) {
+        byte[] photo = userService.getPhoto(id);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(photo);
     }
 }

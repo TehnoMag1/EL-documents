@@ -20,6 +20,10 @@ public class UserEntity {
     @Column(nullable = false)
     private Boolean isAdmin = false;
 
+    @Lob
+    @Column(columnDefinition = "BYTEA")
+    private byte[] photo;
+
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private UKeyEntity uKey;
 

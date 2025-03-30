@@ -14,8 +14,8 @@ public class UserDetailsInfoEntity {
     private Integer id;
 
     private LocalDate birthday;
-    private Integer nPassport;
-    private Integer sPassport;
+    private String workshopName;
+    private String workshopNumber;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)

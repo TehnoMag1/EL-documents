@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class CreateUserDetailsInfoParams {
 
     private LocalDate birthday;
-    private Integer nPassport;
-    private Integer sPassport;
+    private String workshopName;
+    private String workshopNumber;
     private Integer doljnostId;
 }

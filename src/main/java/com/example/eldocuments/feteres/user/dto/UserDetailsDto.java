@@ -15,8 +15,8 @@ public class UserDetailsDto {
     private String midName;
     private String ukey;
     private LocalDate birthday;
-    private Integer npassport;
-    private Integer spassport;
+    private String workshopName;
+    private String workshopNumber;
     private DoljnostDto doljnost;
 
     public static UserDetailsDto create(UserEntity entity) {
@@ -33,8 +33,8 @@ public class UserDetailsDto {
 
         if(entity.getDetails() != null) {
             dto.setBirthday(entity.getDetails().getBirthday());
-            dto.setNpassport(entity.getDetails().getNPassport());
-            dto.setSpassport(entity.getDetails().getSPassport());
+            dto.setWorkshopName(entity.getDetails().getWorkshopName());
+            dto.setWorkshopNumber(entity.getDetails().getWorkshopNumber());
             dto.setDoljnost(DoljnostDto.create(entity.getDetails().getDoljnost()));
         }
 
