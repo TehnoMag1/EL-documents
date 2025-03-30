@@ -2,10 +2,7 @@ package com.example.eldocuments.feteres.user.controllers;
 
 import com.example.eldocuments.common.exceptions.ForbiddenException;
 import com.example.eldocuments.common.security.expressions.CustomSecurityExpression;
-import com.example.eldocuments.feteres.user.dto.CreateUserDetailsInfoParams;
-import com.example.eldocuments.feteres.user.dto.CreateOrUpdateUserParams;
-import com.example.eldocuments.feteres.user.dto.UserDetailsDto;
-import com.example.eldocuments.feteres.user.dto.UserDto;
+import com.example.eldocuments.feteres.user.dto.*;
 import com.example.eldocuments.feteres.user.dto.security.JwtRequestDto;
 import com.example.eldocuments.feteres.user.dto.security.JwtResponseDto;
 import com.example.eldocuments.feteres.user.entities.UserEntity;
@@ -120,5 +117,19 @@ public class UserController {
     public ResponseEntity<byte[]> getPhoto(@PathVariable Integer id) {
         byte[] photo = userService.getPhoto(id);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(photo);
+    }
+
+    @GetMapping("/scan-qr-codes")
+    @SecurityRequirement(name = "bearerAuth")
+    public List<ScanQrCodeEntityDto> getScanQrCodes() {
+        return userService.getScanQrCodes().stream().map(ScanQrCodeEntityDto::new).toList();
+    }
+
+    @PostMapping("/scan-qr-codes")
+    @SecurityRequirement(name = "bearerAuth")
+    public void createScanQrCodes(
+            String code
+    ) {
+        userService.addScanQrCodes(code);
     }
 }

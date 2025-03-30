@@ -3,6 +3,8 @@ package com.example.eldocuments.feteres.user.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity(name = "users")
 public class UserEntity {
@@ -29,4 +31,7 @@ public class UserEntity {
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private UserDetailsInfoEntity details;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<ScanQrCodeEntity> scanQrCodes;
 }

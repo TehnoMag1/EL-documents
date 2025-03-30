@@ -7,9 +7,11 @@ import com.example.eldocuments.feteres.user.dto.CreateUserDetailsInfoParams;
 import com.example.eldocuments.feteres.user.dto.CreateOrUpdateUserParams;
 import com.example.eldocuments.feteres.user.dto.security.JwtRequestDto;
 import com.example.eldocuments.feteres.user.dto.security.JwtResponseDto;
+import com.example.eldocuments.feteres.user.entities.ScanQrCodeEntity;
 import com.example.eldocuments.feteres.user.entities.UKeyEntity;
 import com.example.eldocuments.feteres.user.entities.UserDetailsInfoEntity;
 import com.example.eldocuments.feteres.user.entities.UserEntity;
+import com.example.eldocuments.feteres.user.repositories.ScanQrCodeEntityRepository;
 import com.example.eldocuments.feteres.user.repositories.UKeyRepository;
 import com.example.eldocuments.feteres.user.repositories.UserDetailsInfoRepository;
 import com.example.eldocuments.feteres.user.repositories.UserRepository;
@@ -40,6 +42,9 @@ public class UserService {
     @Lazy
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private ScanQrCodeEntityRepository scanQrCodeEntityRepository;
 
     @Transactional(readOnly = true)
     public List<UserEntity> getAll() {
@@ -149,5 +154,22 @@ public class UserService {
     public byte[] getPhoto(Integer userId) {
         var user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         return user.getPhoto();
+    }
+
+    @Transactional
+    public void addScanQrCodes(
+            String code
+    ) {
+        var user = getUKeyEntityByUKey(code);
+        var scanQrCode = new ScanQrCodeEntity();
+
+        scanQrCode.setUser(user.getUser());
+
+        scanQrCodeEntityRepository.save(scanQrCode);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ScanQrCodeEntity> getScanQrCodes() {
+        return scanQrCodeEntityRepository.findAll();
     }
 }
