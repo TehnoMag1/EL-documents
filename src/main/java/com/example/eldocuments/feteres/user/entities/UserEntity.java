@@ -24,7 +24,7 @@ public class UserEntity {
 
     @Lob
     @Column(columnDefinition = "BYTEA")
-    private byte[] photo;
+    private byte[] photo = null;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private UKeyEntity uKey;
