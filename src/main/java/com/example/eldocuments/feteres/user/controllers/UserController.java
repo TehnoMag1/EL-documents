@@ -128,8 +128,8 @@ public class UserController {
     @PostMapping("/scan-qr-codes")
     @SecurityRequirement(name = "bearerAuth")
     public void createScanQrCodes(
-            String code
+            Integer userId
     ) {
-        userService.addScanQrCodes(code);
+        userService.addScanQrCodes(userId);
     }
 }

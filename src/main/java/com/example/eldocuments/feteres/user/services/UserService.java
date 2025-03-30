@@ -158,12 +158,12 @@ public class UserService {
 
     @Transactional
     public void addScanQrCodes(
-            String code
+            Integer userId
     ) {
-        var user = getUKeyEntityByUKey(code);
+        var user = getById(userId);
         var scanQrCode = new ScanQrCodeEntity();
 
-        scanQrCode.setUser(user.getUser());
+        scanQrCode.setUser(user);
 
         scanQrCodeEntityRepository.save(scanQrCode);
     }
